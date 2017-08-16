@@ -1,24 +1,24 @@
 /**
 var config = {
 
-  CW_ENDPOINT = {
+  CW_ENDPOINT: {
     rooms: 'https://api.chatwork.com/v2/rooms/'
   },
 
-  CW_TOKEN = 'XXXXXXXXXXXXXXXXXXXXXXXX',
-  CW_ROOM_ID = '9999999',
+  CW_TOKEN: 'XXXXXXXXXXXXXXXXXXXXXXXX',
+  CW_ROOM_ID: '9999999',
 
-  TO_ACCOUNT_IDS = [
+  TO_ACCOUNT_IDS: [
     1234556,
   ],
 
-  ERROR_MAIL_SEARCH_CONDITION = 'to:alert@mail.com',
-  WARN_MAIL_SEARCH_CONDITION = 'to:warn@mail.com',
+  ERROR_MAIL_SEARCH_CONDITION: 'to:alert@mail.com',
+  WARN_MAIL_SEARCH_CONDITION: 'to:warn@mail.com',
 
-  RECOVERY_LABEL = 'recovery',
-  MAILING_LIST_NAME = 'mailing_list:',
+  RECOVERY_LABEL: 'recovery',
+  MAILING_LIST_NAME: 'mailing_list:',
 
-  ADD_MSG = '直近のWARN',
+  ADD_MSG: '直近のWARN',
 };
 **/
 
