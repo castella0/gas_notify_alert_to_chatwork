@@ -22,7 +22,6 @@ var config = {
 };
 **/
 
-
 var CACHE_KEY_LAST_ALERT_TIME = 'cache_last_alert_time';
 var CACHE_KEY_LAST_ALERT_KEYWORD = 'cache_last_alert_keyword';
 
@@ -80,7 +79,7 @@ function notifyMail() {
 
       // 直前のアラートメール探す
       var additionalContents = [];
-      var re = new RegExp('^\[' + config.MAILING_LIST_NAME + '[0-9]*\]');
+      var re = new RegExp('^\\[' + config.MAILING_LIST_NAME + '[0-9]*\\]');
       var label = msgContent.subject.match(re);
 
       var thisTimeNo = 0;
