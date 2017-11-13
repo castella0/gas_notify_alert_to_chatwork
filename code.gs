@@ -301,8 +301,19 @@ function checkChatworkRequestMsg() {
 
   var result = null;
 
+  // キャッシュから前回最後に処理したメッセージIDを取得する
+  var cache = CacheService.getScriptCache();
+  var last_message_id = cache.get(config.CACHE_KEY.last_message_id);
+
+  // 最後に処理したメッセージIDが取得できればそのIDを元に新しいメッセージを処理する
+  // 取得できなければAPIで未読分のメッセージのみ取得してくる
+  var force = last_message_id ? 1 : 0;
+
+Logger.log("==FORCE==");
+Logger.log(force);
+
   // 投稿を取得
-  var msgs = UrlFetchApp.fetch(config.CW_ENDPOINT.rooms + config.CW_ROOM_ID + '/messages?force=1', {
+  var msgs = UrlFetchApp.fetch(config.CW_ENDPOINT.rooms + config.CW_ROOM_ID + '/messages?force=' + force, {
     headers: {
       'X-ChatWorkToken': config.CW_TOKEN
     },
@@ -314,13 +325,16 @@ function checkChatworkRequestMsg() {
   if (msgs.length < 1) return result;
 
   var target_msgs = [];
-  // キャッシュに、前回取得した際の最新メッセージが残っている
-  var cache = CacheService.getScriptCache();
-  var last_message_id = cache.get(config.CACHE_KEY.last_message_id);
+
+Logger.log("==LAST MSG ID==");
+Logger.log(last_message_id);
 
   if (last_message_id) {
     var pass_last_message = false;
     msgs.forEach(function(value, index) {
+
+Logger.log(value.message_id + "========");
+
       if (pass_last_message) {
         target_msgs.push(value);
       }
@@ -329,16 +343,27 @@ function checkChatworkRequestMsg() {
         pass_last_message = true;
       }
     });
-  }
 
-  if (!target_msgs.length) {
-    target_msgs[0] = msgs[msgs.length-1];
+    if (!target_msgs.length) {
+      target_msgs[0] = msgs[msgs.length-1];
+    }
+
+  } else {
+    target_msgs = msgs;
   }
 
   var target_msg = null;
+
+Logger.log("== ALL ==");
+Logger.log(target_msgs);
+
   for (var i = 0, tmsgs_len = target_msgs.length; i < tmsgs_len; i++) {
 
     var target_msg = target_msgs[i];
+
+Logger.log( i + "========");
+Logger.log( target_msg );
+
     var check_strs = target_msg.body.split(/(\s+|　+)/);
 
     // コマンドのトリガーチェック
@@ -377,10 +402,8 @@ function checkChatworkRequestMsg() {
 
   }
 
-  if (result) {
-    // しおり
-    cache.put(config.CACHE_KEY.last_message_id, target_msg.message_id, 3600);
-  }
+  // しおり
+  cache.put(config.CACHE_KEY.last_message_id, target_msg.message_id, 3600);
 
   return result;
 }
